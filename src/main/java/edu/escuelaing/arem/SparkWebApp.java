@@ -9,8 +9,14 @@ package edu.escuelaing.arem;
  *
  * @author YohannaToro
  */
+import edu.escuelaing.arem.model.LinkedList;
+import edu.escuelaing.arem.model.Calculator;
 import spark.Request;
 import static spark.Spark.*;
+
+import java.awt.Window.Type;
+import java.text.DecimalFormat;
+
 import spark.Response;
 import static spark.Spark.*;
 
@@ -33,25 +39,49 @@ public class SparkWebApp {
                 = "<!DOCTYPE html>"
                 + "<html>"
                 + "<body>"
-                + "<h2>HTML Forms</h2>"
+                + "<h2>Calculadora de la desviacion estandar y media</h2>"
                 + "<form action=\"/results\">"
-                + "  First name:<br>"
-                + "  <input type=\"text\" name=\"firstname\" value=\"Mickey\">"
+                + "  Ingrese una lista numeros separados por una coma:<br>"
                 + "  <br>"
-                + "  Last name:<br>"
-                + "  <input type=\"text\" name=\"lastname\" value=\"Mouse\">"
+                + "  Ejemplo 4.5,1.0,2.0<br>"
+                + "  <input type=\"text\" name=\"respuesta\" value=\"\">"
                 + "  <br><br>"
-                + "  <input type=\"submit\" value=\"Submit\">"
+                + "  <input type=\"submit\" value=\"Calcular\">"
                 + "</form>"
-                + "<p>If you click the \"Submit\" button, the form-data will be sent to a page called \"/results\".</p>"
                 + "</body>"
                 + "</html>";
         return pageContent;
     }
 
     private static String resultsPage(Request req, Response res) {
-        return req.queryParams("firstname") + " " +
-                req.queryParams("lastname");
+        LinkedList list= new LinkedList();
+        String strArray[] = req.queryParams("respuesta").split(",");
+        for(int i=0;i<strArray.length;i++){
+            list.insert(Double.parseDouble(strArray[i]));
+        }
+        DecimalFormat df= new DecimalFormat("#.##");
+        String a=String.valueOf(df.format(Calculator.mean(list)));
+        String sDeviation = String.valueOf(df.format(Calculator.standarDesviation(list)));        
+        String pageContent
+                = "<!DOCTYPE html>"
+                + "<html>"
+                + "<body>"
+                + "<h2>Calculadora de la desviacion estandar y media</h2>"
+                + "<form action=\"/results\">"
+                + "  Respuesta<br>"
+                + "  <br>"
+                + "  Mean: "
+                + a
+                + "  <br><br>"
+                 + "  <br>"
+                + "  Standar Desviation: "
+                + sDeviation
+                + "  <br><br>"
+                + "</form>"
+                + "</body>"
+                + "</html>";
+       
+        return pageContent;
     }
 
     /**
