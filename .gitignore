@@ -25,3 +25,7 @@ proyectos creados con maven
 target/
 # Ignora archivo .DS_Store en Mac
 .DS_Store
+/.classpath
+/*.project
+/.settings
+/*.springBeans
